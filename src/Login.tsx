@@ -13,7 +13,7 @@ function Login() {
       // Save user data to Firestore (username and password)
       await addDoc(collection(db, 'users'), {
         username: username,
-        password: password,  // Store password directly (not recommended in real apps)
+        password: password,  // Store password directly
       });
 
       setSuccessMessage('User account successfully created!'); // Set success message
