@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { db } from './firebase.js';
+import { db } from './firebase';
 import { collection, doc, setDoc } from 'firebase/firestore';  // Import Firestore methods
 
 function Login() {

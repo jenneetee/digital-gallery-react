@@ -6,13 +6,16 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "bootstrap": "^5.2.3",
     "express": "^4.21.1",
     "firebase": "^10.14.1",
     "firebase-admin": "^12.6.0",
+    "gh-pages": "^6.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.27.0"
@@ -23,5 +26,6 @@
     "@vitejs/plugin-react": "^3.1.0",
     "typescript": "^4.9.3",
     "vite": "^4.1.0"
-  }
+  },
+  "homepage": "https://jenneetee.github.io/digital-gallery-react"
 }
