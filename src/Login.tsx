@@ -1,27 +1,28 @@
 import React, { useState } from 'react';
-import { db } from './firebase.js';  // If it's directly in the src folder.
-import { collection, addDoc } from 'firebase/firestore';  // Import Firestore methods
+import { db } from './firebase.js';
+import { collection, doc, setDoc } from 'firebase/firestore';  // Import Firestore methods
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [successMessage, setSuccessMessage] = useState(''); // State for success message
+  const [successMessage, setSuccessMessage] = useState('');
 
   // Function to handle user registration
   const handleRegister = async () => {
     try {
-      // Save user data to Firestore (username and password)
-      await addDoc(collection(db, 'users'), {
+      // Create a unique user ID (for now, let's assume username is unique; you can use better methods)
+      const userId = username;
+
+      // Save user data to Firestore (create a document for this user)
+      await setDoc(doc(db, 'users', userId), {
         username: username,
-        password: password,  // Store password directly
+        password: password,  // Storing directly for now (not recommended for real apps)
       });
 
-      setSuccessMessage('User account successfully created!'); // Set success message
-      setUsername(''); // Clear input fields
-      setPassword(''); // Clear input fields
+      setSuccessMessage('User successfully registered!');
+      console.log('User data saved to Firestore');
     } catch (error) {
       console.error('Error saving user data:', error);
-      setSuccessMessage('Error creating account. Please try again.'); // Handle error message
     }
   };
 
@@ -50,7 +51,6 @@ function Login() {
         <button onClick={handleRegister}>Register</button>
       </div>
 
-      {/* Display success message if it exists */}
       {successMessage && <p>{successMessage}</p>}
     </div>
   );
