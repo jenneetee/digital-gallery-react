@@ -4,12 +4,13 @@ import { getFirestore } from 'firebase/firestore'; // Only import what you need
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDWPxHOlhGM10Apdufo_mgm8mvsWrallys",
-  authDomain: "digital-art-gallery-2.firebaseapp.com",
-  projectId: "digital-art-gallery-2",
-  storageBucket: "digital-art-gallery-2.appspot.com",
-  messagingSenderId: "1041189150083",
-  appId: "1:1041189150083:web:2711c113690ebf581f6ab6",
+  apiKey: "AIzaSyBT06UbbyuqkCospHIF8TXCIsavhIzMKzw",
+  authDomain: "digital-art-gallery-2941d.firebaseapp.com",
+  projectId: "digital-art-gallery-2941d",
+  storageBucket: "digital-art-gallery-2941d.appspot.com",
+  messagingSenderId: "752229035034",
+  appId: "1:752229035034:web:1dd97833330cf1f70cf5a3",
+  measurementId: "G-RDTBRP8DDW"
 };
 
 // Initialize Firebase
