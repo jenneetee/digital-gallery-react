@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { db } from './firebase.js';  // Import Firebase config
-import { collection, addDoc } from 'firebase/firestore';  // Firestore methods
+import { db } from './firebase.js';  
+import { doc, collection, addDoc } from 'firebase/firestore';  // Firestore methods
 
 function Payments() {
   // State variables for form inputs
@@ -8,21 +8,29 @@ function Payments() {
   const [cvv, setCvv] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
   const [nameOnCard, setNameOnCard] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');  // Success message state
+  const [userId, setUserId] = useState('');  // To identify the user
+  const [successMessage, setSuccessMessage] = useState('');
 
-  // Function to handle form submission
+  // Function to handle payment submission
   const handlePayment = async () => {
     try {
-      // Save payment details to Firestore
-      await addDoc(collection(db, 'payments'), {
+      if (!userId) {
+        setSuccessMessage('Please provide a valid User ID.');
+        return;
+      }
+
+      // Reference to the user's document
+      const userDocRef = doc(db, 'users', userId);
+
+      // Add payment details as a subcollection under the user's document
+      await addDoc(collection(userDocRef, 'payments'), {
         cardNumber: cardNumber,
         cvv: cvv,
         expiryDate: expiryDate,
         nameOnCard: nameOnCard,
       });
 
-      // Set success message and clear input fields
-      setSuccessMessage('Payment details successfully stored!');
+      setSuccessMessage('Payment details successfully stored for user!');
       setCardNumber('');
       setCvv('');
       setExpiryDate('');
@@ -36,6 +44,15 @@ function Payments() {
   return (
     <div>
       <h1>Enter Payment Details</h1>
+
+      <div>
+        User ID:
+      </div>
+      <input
+        type="text"
+        value={userId}
+        onChange={(e) => setUserId(e.target.value)}
+      />
 
       <div>
         Name on Card:
@@ -77,7 +94,6 @@ function Payments() {
         <button onClick={handlePayment}>Submit Payment</button>
       </div>
 
-      {/* Display success message if payment was processed */}
       {successMessage && <p>{successMessage}</p>}
     </div>
   );

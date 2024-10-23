@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import { db } from './firebase.js';  // If it's directly in the src folder.
 import { collection, getDocs, query, where } from 'firebase/firestore';  // Import Firestore methods
 import { Link, useNavigate } from 'react-router-dom';  // Import Link and useNavigate from react-router-dom
@@ -7,6 +8,7 @@ import './Login.css';  // Import the CSS file
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
   const [errorMessage, setErrorMessage] = useState(''); // State for error message
   const navigate = useNavigate(); // Hook for navigation
 
@@ -29,6 +31,7 @@ function Login() {
     } catch (error) {
       console.error('Error checking user data:', error);
       setErrorMessage('Error logging in. Please try again.');
+
     }
   };
 
@@ -60,6 +63,7 @@ function Login() {
           </div>
         )}
       </div>
+
     </div>
   );
 }
