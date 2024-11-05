@@ -8,6 +8,8 @@ import BuyArt from './BuyArt'; // Adjust the import based on your file structure
 import SellArt from './SellArt'; // Adjust the import based on your file structure
 import AccountSettings from './AccountSettings'; // Adjust the import based on your file structure
 import Navbar from './Navbar'; // Adjust the path based on your file structure
+import Gallery from './Gallery';
+import ArtworkDetail from './ArtworkDetail';
 import './App.css'; // Import the CSS file for styling
 
 const App: React.FC = () => {
@@ -95,6 +97,9 @@ const App: React.FC = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/payments" element={<Payments />} />
+        <Route path="/gallery" element={<Gallery />} />
+        <Route path="/" element={<Gallery />} />
+        <Route path="/artwork/:id" element={<ArtworkDetail />} />
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="buy-art" element={<BuyArt />} />
           <Route path="sell-art" element={<SellArt />} />
