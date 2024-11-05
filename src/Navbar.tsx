@@ -14,6 +14,9 @@ const Navbar: React.FC = () => {
         <li style={liStyle}>
           <Link to="/register" style={linkStyle}>Register</Link>
         </li>
+        <li style={liStyle}>
+          <Link to="/gallery" style={linkStyle}>Gallery</Link>
+        </li>
       </ul>
     </nav>
   );
