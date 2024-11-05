@@ -1,33 +1,40 @@
 import React, { useState } from 'react';
-import { db } from './firebase.js';  
-import { doc, collection, addDoc } from 'firebase/firestore';  // Firestore methods
+import { db, auth } from './firebase.js';  
+import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';  // Firestore methods
+import './Payments.css';
 
-function Payments() {
+const Payments: React.FC = () => {
   // State variables for form inputs
   const [cardNumber, setCardNumber] = useState('');
   const [cvv, setCvv] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
   const [nameOnCard, setNameOnCard] = useState('');
-  const [userId, setUserId] = useState('');  // To identify the user
   const [successMessage, setSuccessMessage] = useState('');
 
   // Function to handle payment submission
   const handlePayment = async () => {
     try {
-      if (!userId) {
-        setSuccessMessage('Please provide a valid User ID.');
+      const user = auth.currentUser;
+      const userId = user.uid;
+
+      const userDoc = query(collection(db, 'users'), where('uid', '==', user.uid));
+      const querySnapshot = await getDocs(userDoc);
+      if (querySnapshot.empty) {
+        console.error('User document does not exist:', userId);
+        setSuccessMessage('User document does not exist.');
         return;
       }
 
-      // Reference to the user's document
-      const userDocRef = doc(db, 'users', userId);
+      const userDocRef = querySnapshot.docs[0].ref;
 
       // Add payment details as a subcollection under the user's document
       await addDoc(collection(userDocRef, 'payments'), {
+        uid: userId,
         cardNumber: cardNumber,
         cvv: cvv,
         expiryDate: expiryDate,
         nameOnCard: nameOnCard,
+        createdAt: new Date(),
       });
 
       setSuccessMessage('Payment details successfully stored for user!');
@@ -42,18 +49,8 @@ function Payments() {
   };
 
   return (
-    <div>
+    <div className="payments-container">
       <h1>Enter Payment Details</h1>
-
-      <div>
-        User ID:
-      </div>
-      <input
-        type="text"
-        value={userId}
-        onChange={(e) => setUserId(e.target.value)}
-      />
-
       <div>
         Name on Card:
       </div>
@@ -91,6 +88,7 @@ function Payments() {
       />
 
       <div>
+        <br />
         <button onClick={handlePayment}>Submit Payment</button>
       </div>
 

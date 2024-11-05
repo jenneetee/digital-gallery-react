@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-
-import { db } from './firebase.js';  // If it's directly in the src folder.
+import { db, auth } from './firebase.js';  // If it's directly in the src folder.
 import { collection, getDocs, query, where } from 'firebase/firestore';  // Import Firestore methods
 import { Link, useNavigate } from 'react-router-dom';  // Import Link and useNavigate from react-router-dom
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import './Login.css';  // Import the CSS file
 
 function Login() {
-  const [username, setUsername] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
 
   const [errorMessage, setErrorMessage] = useState(''); // State for error message
@@ -15,19 +15,31 @@ function Login() {
   // Function to handle user login
   const handleLogin = async () => {
     try {
-      // Query Firestore for the user with the given username and password
-      const q = query(collection(db, 'users'), where('username', '==', username), where('password', '==', password));
-      const querySnapshot = await getDocs(q);
+      let email;
 
-      if (querySnapshot.empty) {
-        // If no matching user is found, set error message
-        setErrorMessage('Incorrect Username and Password');
+      // Check if the identifier looks like an email
+      if (identifier.includes('@')) {
+        email = identifier; // Treat as email
       } else {
-        // If a matching user is found, clear error message and proceed with login
-        setErrorMessage('');
-        // Redirect to the dashboard
-        navigate('/dashboard');
+        // If it's not an email, query Firestore for the username
+        const q = query(collection(db, 'users'), where('username', '==', identifier));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          setErrorMessage('Username not found.'); // Handle case where username does not exist
+          return;
+        }
+
+        // Assuming the first document is the user we want
+        const userDoc = querySnapshot.docs[0].data();
+        email = userDoc.email; // Get the email from the user document
       }
+
+      // Sign in with email and password
+      await signInWithEmailAndPassword(auth, email, password);
+      
+      // Redirect to the dashboard after successful login
+      navigate('/dashboard');
     } catch (error) {
       console.error('Error checking user data:', error);
       setErrorMessage('Error logging in. Please try again.');
@@ -42,9 +54,9 @@ function Login() {
         <form>
           <input
             type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Email or Username"
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
           />
           <input
             type="password"

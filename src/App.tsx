@@ -8,6 +8,7 @@ import BuyArt from './BuyArt'; // Adjust the import based on your file structure
 import SellArt from './SellArt'; // Adjust the import based on your file structure
 import AccountSettings from './AccountSettings'; // Adjust the import based on your file structure
 import Navbar from './Navbar'; // Adjust the path based on your file structure
+import { AuthProvider, useAuth } from './AuthContext';
 import './App.css'; // Import the CSS file for styling
 
 const App: React.FC = () => {
@@ -15,6 +16,7 @@ const App: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [volume, setVolume] = useState(0.25); // Set initial volume to 25%
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
+  //const { user } = useAuth();
 
   const playlist = [
     { src: 'background-music(overmydeadbody).mp3', title: 'Over My Dead Body' },
@@ -68,41 +70,50 @@ const App: React.FC = () => {
   };
 
   return (
-    <Router>
-      <Navbar />
-      <div className="audio-controls">
-        <button onClick={togglePlayPause}>
-          {isPlaying ? 'Pause' : 'Play'}
-        </button>
-        <button onClick={handlePrevSong}>Previous</button>
-        <button onClick={handleNextSong}>Next</button>
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={volume}
-          onChange={handleVolumeChange}
-        />
-        <div>Now Playing: {playlist[currentSongIndex].title}</div>
-      </div>
-      <audio ref={audioRef} autoPlay loop key={playlist[currentSongIndex].src}>
-        <source src={playlist[currentSongIndex].src} type="audio/mpeg" />
-        Your browser does not support the audio element.
-      </audio>
-      <Routes>
-        <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/payments" element={<Payments />} />
-        <Route path="/dashboard" element={<Dashboard />}>
-          <Route path="buy-art" element={<BuyArt />} />
-          <Route path="sell-art" element={<SellArt />} />
-          <Route path="account-settings" element={<AccountSettings />} />
-        </Route>
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Navbar />
+        <div className="audio-controls">
+          <button onClick={togglePlayPause}>
+            {isPlaying ? 'Pause' : 'Play'}
+          </button>
+          <button onClick={handlePrevSong}>Previous</button>
+          <button onClick={handleNextSong}>Next</button>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={volume}
+            onChange={handleVolumeChange}
+          />
+          <div>Now Playing: {playlist[currentSongIndex].title}</div>
+        </div>
+        <audio ref={audioRef} autoPlay loop key={playlist[currentSongIndex].src}>
+          <source src={playlist[currentSongIndex].src} type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/dashboard" element={<ProtectedDashboard />}>
+            <Route path="buy-art" element={<BuyArt />} />
+            <Route path="sell-art" element={<SellArt />} />
+            <Route path="payments" element={<Payments />} />
+            <Route path="account-settings" element={<AccountSettings />} />
+          </Route>
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 };
+
+const ProtectedDashboard = () => {
+  const { user } = useAuth();
+  console.log("User:", user);
+  return user ? <Dashboard /> : <Navigate to="/login" />;
+};
+
 
 export default App;

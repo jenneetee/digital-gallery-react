@@ -1,19 +1,45 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
+import { auth } from './firebase';
 
 const Navbar: React.FC = () => {
+  const  { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await auth.signOut();
+      navigate('/login'); // Redirect to login after logout
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+
   return (
     <nav style={navStyle}>
       <ul style={ulStyle}>
+        {user ? (
+        <>
         <li style={liStyle}>
-          <Link to="/" style={linkStyle}>Login</Link>
+          <span style={linkStyle}>Currently LoggedIn as, {user.displayName}</span>
         </li>
         <li style={liStyle}>
-          <Link to="/payments" style={linkStyle}>Payments</Link>
+          <Link to="/dashboard" style={linkStyle}>Dashboard</Link>
+        </li>
+        <li style={liStyle}>
+          <button onClick={handleLogout}>Logout</button>
+        </li>
+        </>
+        ) : (
+        <>
+        <li style={liStyle}>
+          <Link to="/login" style={linkStyle}>Login</Link>
         </li>
         <li style={liStyle}>
           <Link to="/register" style={linkStyle}>Register</Link>
         </li>
+        </>)}
       </ul>
     </nav>
   );
