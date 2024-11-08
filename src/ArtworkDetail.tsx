@@ -64,8 +64,10 @@ function ArtworkDetail() {
                     <h1>{artwork.title}</h1>
                     <img src={artwork.imageUrl} alt={artwork.title} />
                     <p>{artwork.description}</p>
-                    <p>By: {artwork.artist}</p>
+                    <h4>Artist: {artwork.artist}</h4>
 
+                    <br></br>
+                    <hr></hr>
                     <h2>Comments</h2>
                     <div className="comments-section">
                         {comments.map((comment) => (
