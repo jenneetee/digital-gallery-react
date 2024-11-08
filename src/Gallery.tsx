@@ -1,4 +1,3 @@
-// Gallery.tsx
 import React, { useState, useEffect } from 'react';
 import { db } from './firebase';
 import { collection, getDocs, addDoc } from 'firebase/firestore';
@@ -12,6 +11,7 @@ function Gallery() {
   const [description, setDescription] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [artist, setArtist] = useState('');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     const fetchArtworks = async () => {
@@ -51,6 +51,10 @@ function Gallery() {
     }
   };
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   return (
     <div className="gallery">
       <h1>Artwork Gallery</h1>
@@ -60,25 +64,62 @@ function Gallery() {
       ) : (
         <div className="gallery-grid">
           {artworks.map((artwork) => (
-            <Link key={artwork.id} to={`/artwork/${artwork.id}`} className="gallery-item">
-              <img src={artwork.imageUrl} alt={artwork.title} className="artwork-image" />
-              <h2 className="artwork-title">{artwork.title}</h2>
-              <p className="artwork-artist">By: {artwork.artist}</p>
-            </Link>
+            <div key={artwork.id} className="gallery-item-wrapper">
+              <Link to={`/artwork/${artwork.id}`}>
+                <div className="gallery-item">
+                  <img
+                    src={artwork.imageUrl}
+                    alt={artwork.title}
+                    className="artwork-image"
+                  />
+                </div>
+                <h2 className="artwork-title">{artwork.title}</h2>
+                <p className="artwork-artist">By: {artwork.artist}</p>
+              </Link>
+            </div>
           ))}
         </div>
       )}
 
-      <div className="upload-box">
+      {/* Sidebar for the upload form */}
+      <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <h2>Upload New Artwork</h2>
         <form onSubmit={handleUpload} className="upload-form">
-          <input type="text" placeholder="Artist's Name" value={artist} onChange={(e) => setArtist(e.target.value)} required />
-          <input type="text" placeholder="Artwork Title" value={title} onChange={(e) => setTitle(e.target.value)} required />
-          <textarea placeholder="Artwork Description" value={description} onChange={(e) => setDescription(e.target.value)} required />
-          <input type="text" placeholder="Image URL" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} required />
+          <input
+            type="text"
+            placeholder="Artist's Name"
+            value={artist}
+            onChange={(e) => setArtist(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Artwork Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+          <textarea
+            placeholder="Artwork Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Image URL"
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
+            required
+          />
           <button type="submit">Upload Artwork</button>
         </form>
       </div>
+
+      {/* Button to toggle the sidebar */}
+      <button className="toggle-btn" onClick={toggleSidebar}>
+        {isSidebarOpen ? 'Close' : 'Upload'}
+      </button>
     </div>
   );
 }
