@@ -1,12 +1,14 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import Homepage from './Homepage';
 import Login from './Login';      // Adjust the import based on your file structure
 import Register from './Register'; // Adjust the import based on your file structure
 import Payments from './Payments'; // Adjust the import based on your file structure
 import Dashboard from './Dashboard'; // Adjust the import based on your file structure
-import BuyArt from './BuyArt'; // Adjust the import based on your file structure
-import SellArt from './SellArt'; // Adjust the import based on your file structure
-import AccountSettings from './AccountSettings'; // Adjust the import based on your file structure
+import ProfileManagement from './ProfileManagement'; // Adjust the import based on your file structure
+import Profile from './Profile';
+import Gallery from './Gallery';
+import Search from './Search';
 import Navbar from './Navbar'; // Adjust the path based on your file structure
 import { AuthProvider, useAuth } from './AuthContext';
 import './App.css'; // Import the CSS file for styling
@@ -94,14 +96,16 @@ const App: React.FC = () => {
           Your browser does not support the audio element.
         </audio>
         <Routes>
-          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/" element={<Navigate to="/homepage" />} />
+          <Route path="/homepage" element={<Homepage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<ProtectedDashboard />}>
-            <Route path="buy-art" element={<BuyArt />} />
-            <Route path="sell-art" element={<SellArt />} />
             <Route path="payments" element={<Payments />} />
-            <Route path="account-settings" element={<AccountSettings />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="profile/profile-management" element={<ProfileManagement />} />
+            <Route path="gallery" element={<Gallery />} />
+            <Route path="search" element={<Search />} />
           </Route>
         </Routes>
       </Router>
@@ -111,7 +115,6 @@ const App: React.FC = () => {
 
 const ProtectedDashboard = () => {
   const { user } = useAuth();
-  console.log("User:", user);
   return user ? <Dashboard /> : <Navigate to="/login" />;
 };
 

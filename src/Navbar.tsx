@@ -25,6 +25,9 @@ const Navbar: React.FC = () => {
           <span style={linkStyle}>Currently LoggedIn as, {user.displayName}</span>
         </li>
         <li style={liStyle}>
+          <Link to="/homepage" style={linkStyle}>Homepage</Link>
+        </li>
+        <li style={liStyle}>
           <Link to="/dashboard" style={linkStyle}>Dashboard</Link>
         </li>
         <li style={liStyle}>
@@ -33,6 +36,9 @@ const Navbar: React.FC = () => {
         </>
         ) : (
         <>
+        <li style={liStyle}>
+          <Link to="/homepage" style={linkStyle}>Homepage</Link>
+        </li>
         <li style={liStyle}>
           <Link to="/login" style={linkStyle}>Login</Link>
         </li>

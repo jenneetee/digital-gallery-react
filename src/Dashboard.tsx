@@ -6,10 +6,10 @@ const Dashboard: React.FC = () => {
   return (
     <div className="dashboard-container">
       <nav className="dashboard-nav">
-        <Link to="buy-art" className="dashboard-tab">Buy Art</Link>
+        <Link to="profile" className="dashboard-tab">Profile</Link>
         <Link to="payments" className="dashboard-tab">Payment Details</Link>
-        <Link to="sell-art" className="dashboard-tab">Sell Art</Link>
-        <Link to="account-settings" className="dashboard-tab">Account Settings</Link>
+        <Link to="gallery" className="dashboard-tab">Gallery</Link>
+        <Link to="search" className="dashboard-tab">Search</Link>
       </nav>
       <div className="dashboard-content">
         <Outlet />
