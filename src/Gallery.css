@@ -1,4 +1,18 @@
-/* Style for the artwork gallery */
+.lavishly-yours-regular {
+    font-family: "Lavishly Yours", cursive;
+    font-weight: 400;
+    font-style: normal;
+}
+
+h1 {
+    font-family: "Lavishly Yours", cursive;
+    margin: 10px;
+}
+
+body{
+    padding-bottom: 100px;
+}
+
 .gallery {
     text-align: center;
     padding: 20px;
@@ -11,53 +25,111 @@
     justify-content: center;
 }
 
+.gallery-item-wrapper {
+    text-align: center;
+    width: 500px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.3s ease; /* Smooth transition for scaling */
+}
+
+.gallery-item-wrapper a {
+    text-decoration: none;
+    color: inherit;
+}
+
 .gallery-item {
     border: 1px solid #ccc;
     padding: 10px;
-    width: 200px;
-    text-align: center;
+    width: 100%;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #cfcfcf;
+    transition: transform 0.3s ease; /* Smooth transition for scaling */
+}
+
+.gallery-item:hover {
+    transform: scale(1.05); /* Scales the item by 5% on hover */
 }
 
 .artwork-image {
-    width: 100%;
-    height: auto;
+    max-width: 90%;
+    max-height: 90%;
+    margin: auto;
+    display: block;
 }
 
 .artwork-title,
-.artwork-description,
 .artwork-artist {
     margin: 5px 0;
+    font-family: 'Times New Roman', Times, serif;
 }
 
-/* Style for the upload form box */
-.upload-box {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+/* Style for the collapsible sidebar */
+.sidebar {
+    position: absolute; /* Change to absolute positioning */
+    top: 80px; /* Adjust to move below the navbar (adjust as needed) */
+    right: -300px; /* Start with the sidebar off-screen */
+    width: 300px;
+    height: 100%; /* Sidebar takes up full height */
     background-color: #f9f9f9;
-    padding: 15px;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    transition: right 0.3s ease-in-out; /* Smooth transition for opening and closing */
+    z-index: 1000; /* Ensure it stays above other content */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar.open {
+    right: 0; /* Move the sidebar into view */
+}
+
+/* Button to toggle the sidebar */
+.toggle-btn {
+    position: absolute; /* Change to absolute positioning */
+    top: 80px; /* Move button down to align with sidebar */
+    right: 20px;
+    background-color: #252525;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 1001; /* Ensure it stays above the sidebar */
+}
+
+.toggle-btn:hover {
+    background-color: #45a049;
+}
+
+/* Ensure the gallery content doesn't overlap the sidebar */
+body.sidebar-open .gallery {
+    margin-right: 300px; /* Shift the gallery content when the sidebar is open */
 }
 
 .upload-form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    max-width: 400px;
-    margin: 0 auto;
+    gap: 8px;
 }
 
 .upload-form input,
 .upload-form textarea {
-    padding: 8px;
+    padding: 6px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-size: 14px;
 }
 
 .upload-form button {
-    padding: 10px;
+    padding: 8px;
+    font-size: 14px;
     border: none;
-    background-color: #4CAF50;
+    background-color: #202020;
     color: white;
     border-radius: 4px;
     cursor: pointer;
