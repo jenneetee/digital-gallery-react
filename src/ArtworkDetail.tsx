@@ -12,6 +12,11 @@ function ArtworkDetail() {
     const [username, setUsername] = useState('');
 
     useEffect(() => {
+        if (!id) {
+            console.log('No artwork ID provided.');
+            return;
+        }    
+
         const fetchArtwork = async () => {
             const docRef = doc(db, 'artworks', id);
             const docSnap = await getDoc(docRef);
@@ -35,6 +40,11 @@ function ArtworkDetail() {
 
     const handleCommentSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!id) {
+            console.log('No artwork ID provided.');
+            return;
+        }    
+
         try {
             // Add a new comment
             const commentsCollection = collection(db, 'artworks', id, 'comments');

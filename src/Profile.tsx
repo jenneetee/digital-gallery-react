@@ -8,6 +8,7 @@ const Profile: React.FC = () => {
     const [name, setName] = useState("");
     const [username, setUsername] = useState("");
     const [profilePicture, setProfilePicture] = useState("");
+    const [loading, setLoading] = useState(true);
 
     const fetchUserData = async () => {
         try {
@@ -48,6 +49,8 @@ const Profile: React.FC = () => {
             }
         } catch (error) {
             console.error("Error fetching document:", error);
+        } finally {
+            setLoading(false);
         }
     }
     useEffect(() => {
@@ -57,16 +60,22 @@ const Profile: React.FC = () => {
     return (
         <div className="profile-container">
         <h1>Profile</h1>
-        <img src={profilePicture} alt="Profile" className="profile-img" />
-        <h3>{name}</h3>
-        <p>@{username}</p>
-        <Link to="./profile-management" >Edit Profile</Link>
-        <br /><br />
-        <h2>Artwork</h2>
-        <br />
-        <h3>Comments</h3>
-        <div>
-        </div>
+        {loading ? (
+        <div className="loading">Loading...</div> // Show loading message
+        ) : (
+            <>
+                <img src={profilePicture} alt="Profile" className="profile-img" />
+                <h3>{name}</h3>
+                <p>@{username}</p>
+                <Link to="./profile-management" >Edit Profile</Link>
+                <br /><br />
+                <h2>Artwork</h2>
+                <br />
+                <h3>Comments</h3>
+                <div>
+                </div>
+            </>
+        )}
         </div>
     );
 };

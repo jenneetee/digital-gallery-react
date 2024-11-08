@@ -8,6 +8,7 @@ import Dashboard from './Dashboard'; // Adjust the import based on your file str
 import ProfileManagement from './ProfileManagement'; // Adjust the import based on your file structure
 import Profile from './Profile';
 import Gallery from './Gallery';
+import ArtworkDetail from './ArtworkDetail';
 import Search from './Search';
 import Navbar from './Navbar'; // Adjust the path based on your file structure
 import { AuthProvider, useAuth } from './AuthContext';
@@ -100,6 +101,7 @@ const App: React.FC = () => {
           <Route path="/homepage" element={<Homepage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/artwork/:id" element={<ArtworkDetail />} />
           <Route path="/dashboard" element={<ProtectedDashboard />}>
             <Route path="payments" element={<Payments />} />
             <Route path="profile" element={<Profile />} />

@@ -13,6 +13,7 @@ const ProfileManagement: React.FC = () => {
   const [profilePicture, setProfilePicture] = useState("");
   const [file, setFile] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
   const clientId = import.meta.env.VITE_IMGUR_CLIENT_ID;
   const fetchUserData = async () => {
     try {
@@ -44,6 +45,8 @@ const ProfileManagement: React.FC = () => {
         }
     } catch (error) {
         console.error("Error fetching document:", error);
+    } finally {
+      setLoading(false);
     }
 }
 
@@ -191,29 +194,35 @@ const ProfileManagement: React.FC = () => {
   return (
     <div className="profilemanagement-container">
       <h1>Profile Management</h1>
-      <div>
-        <label>Profile Picture:</label> <br />
-        <img src={profilePicture} alt="Profile" className="profile-img" /> <br /> <br />
-        <input type="file" onChange={handleFileChange} />
-      </div> <br />
-      <div>
-        <label>Name: </label> <br />
-        <input value={name} onChange={(e) => setName(e.target.value)} />
-      </div>
-      <div>
-        <label>Username: </label> <br />
-        @<input value={username} onChange={(e) => setUsername(e.target.value)} />
-      </div>
-      <div>
-        <label>Email: </label> <br />
-        <input value={email} onChange={(e) => setEmail(e.target.value)} />
-      </div>
-      <div>
-        <label>Password: </label> <br />
-        <input value={'•'.repeat(password.length)} onChange={(e) => setPassword(e.target.value)} />
-      </div> <br />
+      {loading ? (
+        <div className="loading">Loading...</div> // Show loading message
+      ) : (
+        <>
+          <div>
+            <label>Profile Picture:</label> <br />
+            <img src={profilePicture} alt="Profile" className="profile-img" /> <br /> <br />
+            <input type="file" onChange={handleFileChange} />
+          </div> <br />
+          <div>
+            <label>Name: </label> <br />
+            <input value={name} onChange={(e) => setName(e.target.value)} />
+          </div>
+          <div>
+            <label>Username: </label> <br />
+            @<input value={username} onChange={(e) => setUsername(e.target.value)} />
+          </div>
+          <div>
+            <label>Email: </label> <br />
+            <input value={email} onChange={(e) => setEmail(e.target.value)} />
+          </div>
+          <div>
+            <label>Password: </label> <br />
+            <input value={'•'.repeat(password.length)} onChange={(e) => setPassword(e.target.value)} />
+          </div> <br />
 
-      <button onClick={updateUserData}>Update Profile</button>
+          <button onClick={updateUserData}>Update Profile</button>
+        </>
+      )}
     </div>
   );
 };
