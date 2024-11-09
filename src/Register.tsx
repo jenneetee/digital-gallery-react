@@ -92,25 +92,29 @@ function Register() {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-          /> <br />
+            required
+          />
           <input
             type="text"
             placeholder="Name"
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
-          /> <br />
+            required
+          />
           <input
             type="text"
             placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-          /> <br />
+            required
+          />
           <input
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-          /> <br />
+            required
+          />
           <button type="button" className="button" onClick={handleRegister}>Register</button>
         </form>
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}

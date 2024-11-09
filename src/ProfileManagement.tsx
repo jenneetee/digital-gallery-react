@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { db, auth } from './firebase.js';
 import axios from 'axios';
 import { doc, collection, getDoc, getDocs, query, where, updateDoc } from 'firebase/firestore';  // Firestore methods
@@ -6,6 +7,7 @@ import { EmailAuthProvider, updateProfile, updateEmail, updatePassword, reauthen
 import './ProfileManagement.css'; // Import the CSS file for styling
 
 const ProfileManagement: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -15,10 +17,10 @@ const ProfileManagement: React.FC = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const clientId = import.meta.env.VITE_IMGUR_CLIENT_ID;
+  const user = auth.currentUser;
+  const userId = user.uid;
   const fetchUserData = async () => {
     try {
-        const user = auth.currentUser;
-        const userId = user.uid;
 
         const userDoc = query(collection(db, 'users'), where('uid', '==', user.uid));
         const querySnapshot = await getDocs(userDoc);
@@ -198,6 +200,8 @@ const ProfileManagement: React.FC = () => {
         <div className="loading">Loading...</div> // Show loading message
       ) : (
         <>
+          {id == userId ? (
+          <>
           <div>
             <label>Profile Picture:</label> <br />
             <img src={profilePicture} alt="Profile" className="profile-img" /> <br /> <br />
@@ -221,6 +225,8 @@ const ProfileManagement: React.FC = () => {
           </div> <br />
 
           <button onClick={updateUserData}>Update Profile</button>
+          </> ):
+          (<><p>Sorry, You are not allowed to access this page.</p></>)}
         </>
       )}
     </div>

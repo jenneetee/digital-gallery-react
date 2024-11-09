@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { db } from './firebase';  // Ensure this is correctly imported
-import { collection, doc, getDoc, getDocs, addDoc } from 'firebase/firestore';
+import { useParams, Link } from 'react-router-dom';
+import { db, auth } from './firebase';  // Ensure this is correctly imported
+import { collection, doc, getDoc, getDocs, addDoc, query, where} from 'firebase/firestore';
 import './ArtworkDetail.css';
 
 function ArtworkDetail() {
     const { id } = useParams<{ id: string }>();
     const [artwork, setArtwork] = useState<any>(null);
+    const [profilePicture, setProfilePicture] = useState('');
     const [comments, setComments] = useState<any[]>([]);
     const [commentText, setCommentText] = useState('');
-    const [username, setUsername] = useState('');
+    const [error, setError] = useState('');
 
     useEffect(() => {
         if (!id) {
@@ -21,7 +22,11 @@ function ArtworkDetail() {
             const docRef = doc(db, 'artworks', id);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
-                setArtwork(docSnap.data());
+                const artworkData = docSnap.data();
+                setArtwork(artworkData);
+                if (artworkData.uid) {
+                    fetchUser(artworkData.uid);
+                }
             } else {
                 console.log('No such document!');
             }
@@ -34,6 +39,29 @@ function ArtworkDetail() {
             setComments(commentsData);
         };
 
+        const fetchUser = async (userId) => {
+            try {
+                const userDoc = query(collection(db, 'users'), where('uid', '==', userId));
+                const querySnapshot = await getDocs(userDoc);
+                if (querySnapshot.empty) {
+                    console.error('User document does not exist:', userId);
+                    return;
+                }
+                const userDocRef = querySnapshot.docs[0].ref;
+                const userDocSnap = await getDoc(userDocRef);
+    
+                if (userDocSnap.exists()) {
+                    const userData = userDocSnap.data(); // Fetches the entire document data as an object
+                    console.log("User data:", userData);
+                    setProfilePicture(userData.profilePicture);
+                }
+                else {
+                    console.log("User Null");
+                }
+            } catch {
+                console.error("Error fetching document:", error);
+            }
+        }
         fetchArtwork();
         fetchComments();
     }, [id]);
@@ -46,17 +74,32 @@ function ArtworkDetail() {
         }    
 
         try {
-            // Add a new comment
-            const commentsCollection = collection(db, 'artworks', id, 'comments');
-            await addDoc(commentsCollection, {
-                username,
-                text: commentText,
-                createdAt: new Date() // Optional: Add a timestamp
-            });
+            const user = auth.currentUser;
+            const userId = user.uid;
 
+            const userDoc = query(collection(db, 'users'), where('uid', '==', user.uid));
+            const querySnapshot = await getDocs(userDoc);
+            if (querySnapshot.empty) {
+                console.error('User document does not exist:', userId);
+                return;
+            }
+            const userDocRef = querySnapshot.docs[0].ref;
+            const userDocSnap = await getDoc(userDocRef);
+            const commentsCollection = collection(db, 'artworks', id, 'comments');
+
+            if (userDocSnap.exists()) {
+                const userData = userDocSnap.data(); // Fetches the entire document data as an object
+                console.log("User data:", userData);
+                await addDoc(commentsCollection, {
+                    uid: user.uid,
+                    name: user.displayName,
+                    username: userData.username,
+                    text: commentText,
+                    createdAt: new Date() // Optional: Add a timestamp
+                });
+            }
             // Reset form fields
             setCommentText('');
-            setUsername('');
 
             // Refresh comments
             const commentsSnapshot = await getDocs(commentsCollection);
@@ -74,7 +117,13 @@ function ArtworkDetail() {
                     <h1>{artwork.title}</h1>
                     <img src={artwork.imageUrl} alt={artwork.title} />
                     <p>{artwork.description}</p>
-                    <h4>Artist: {artwork.artist}</h4>
+                    <div className="artist-detail">
+                        <h4>Artist: <br /> <img src={profilePicture} className="profile-artist" />  
+                            <Link to={`/profile/${artwork.uid}`}> 
+                                {artwork.artist} 
+                            </Link>
+                        </h4>
+                    </div>
 
                     <br></br>
                     <hr></hr>
@@ -82,20 +131,17 @@ function ArtworkDetail() {
                     <div className="comments-section">
                         {comments.map((comment) => (
                             <div key={comment.id} className="comment">
-                                <strong>{comment.username}:</strong>
+                                <Link to={`/profile/${comment.uid}`}> 
+                                    <span>
+                                        <strong>{comment.name}@{comment.username}:</strong> 
+                                    </span>
+                                </Link>
                                 <p>{comment.text}</p>
                             </div>
                         ))}
                     </div>
 
                     <form onSubmit={handleCommentSubmit}>
-                        <input
-                            type="text"
-                            placeholder="Your Username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            required
-                        />
                         <textarea
                             placeholder="Add a comment"
                             value={commentText}

@@ -1,8 +1,9 @@
 // Gallery.tsx
 import React, { useState, useEffect } from 'react';
-import { db } from './firebase';
-import { collection, getDocs, addDoc } from 'firebase/firestore';
+import { db, auth } from './firebase';
+import { collection, getDocs, addDoc, where, query } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import './Gallery.css';
 
 interface Artwork {
@@ -11,6 +12,8 @@ interface Artwork {
   description: string;
   imageUrl: string;
   artist: string;
+  uid: string;
+  createdAt: Date;
 }
 
 const Gallery: React.FC = () => {
@@ -18,9 +21,10 @@ const Gallery: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [artist, setArtist] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [error, setError] = useState('');
+  const clientId = import.meta.env.VITE_IMGUR_CLIENT_ID;
 
   useEffect(() => {
     const fetchArtworks = async () => {
@@ -45,24 +49,69 @@ const Gallery: React.FC = () => {
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const newArtwork = { title, description, imageUrl, artist };
+      const imageFileUrl = await handleArtworkUpload(); // Awaiting the returned image URL
+      if (!imageFileUrl) {
+        console.error('Failed to upload image.');
+        return;
+      }
+      const user = auth.currentUser;
+      const userId = user.uid;
+      const newArtwork = { title, description, imageUrl: imageFileUrl, artist: user.displayName, uid: userId, createdAt: new Date() };
       const docRef = await addDoc(collection(db, 'artworks'), newArtwork);
+      const userDoc = query(collection(db, 'users'), where('uid', '==', user.uid));
+      const querySnapshot = await getDocs(userDoc);
+      if (querySnapshot.empty) {
+        console.error('User document does not exist:', userId);
+        setError('User document does not exist.');
+        return;
+      }
+
+      const userDocRef = querySnapshot.docs[0].ref;
 
       setTitle('');
       setDescription('');
-      setImageUrl('');
-      setArtist('');
+      const userArtworkRef = await addDoc(collection(userDocRef, 'artwork'), newArtwork);
+      console.log('Added artwork to user-specific artwork subcollection:', userArtworkRef.id);
       setArtworks((prevArtworks) => [
         ...prevArtworks,
         { id: docRef.id, ...newArtwork },
       ]);
+
+      console.log("Sent");
     } catch (error) {
       console.error('Error uploading artwork:', error);
     }
   };
   
+  const handleArtworkUpload = async () => {
+    if (!file) return;
+    const formData = new FormData();
+    formData.append('image', file);
+      try {
+        // Make API call to Imgur
+        const response = await axios.post('https://api.imgur.com/3/upload', formData, {
+            headers: {
+                'Authorization': 'Client-ID ' + clientId,
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+
+        const fileUrl = response.data.data.link; // Get the image URL from the response
+
+        return fileUrl;
+
+    } catch (error) {
+        console.error('An unexpected error occurred:', error);
+        setError("An unexpected error occurred.");
+      }
+  };
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
   };
 
   return (
@@ -97,13 +146,6 @@ const Gallery: React.FC = () => {
         <form onSubmit={handleUpload} className="upload-form">
           <input
             type="text"
-            placeholder="Artist's Name"
-            value={artist}
-            onChange={(e) => setArtist(e.target.value)}
-            required
-          />
-          <input
-            type="text"
             placeholder="Artwork Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -115,13 +157,7 @@ const Gallery: React.FC = () => {
             onChange={(e) => setDescription(e.target.value)}
             required
           />
-          <input
-            type="text"
-            placeholder="Image URL"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-            required
-          />
+          <input type="file" onChange={handleFileChange} required/>
           <button type="submit">Upload Artwork</button>
         </form>
       </div>

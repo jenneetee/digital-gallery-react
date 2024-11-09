@@ -102,10 +102,12 @@ const App: React.FC = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/artwork/:id" element={<ArtworkDetail />} />
+          <Route path="/profile/:id" element={<Profile />} />
+          <Route path="/profile/:id/profile-management" element={<ProfileManagement />} />
           <Route path="/dashboard" element={<ProtectedDashboard />}>
             <Route path="payments" element={<Payments />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="profile/profile-management" element={<ProfileManagement />} />
+            <Route path="profile/:id" element={<Profile />} />
+            <Route path="profile/:id/profile-management" element={<ProfileManagement />} />
             <Route path="gallery" element={<Gallery />} />
             <Route path="search" element={<Search />} />
           </Route>
