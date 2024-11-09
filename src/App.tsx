@@ -74,7 +74,7 @@ const App: React.FC = () => {
 
   return (
     <AuthProvider>
-      <Router>
+      <Router basename="/digital-gallery-react">
         <Navbar />
         <div className="audio-controls">
           <button onClick={togglePlayPause}>
