@@ -91,19 +91,25 @@ const Profile: React.FC = () => {
         }    
 
         try {
-            const userId = id;
-            const userDoc = query(collection(db, 'users'), where('uid', '==', userId));
-            const querySnapshot = await getDocs(userDoc);
-            if (querySnapshot.empty) {
-                console.error('User document does not exist:', userId);
+            const userDoc1 = query(collection(db, 'users'), where('uid', '==', id));
+            const userDoc2 = query(collection(db, 'users'), where('uid', '==', user.uid));
+            const querySnapshot1 = await getDocs(userDoc1);
+            if (querySnapshot1.empty) {
+                console.error('User document does not exist:', id);
                 return;
             }
-            const userDocRef = querySnapshot.docs[0].ref;
-            const userDocSnap = await getDoc(userDocRef);
-            const commentsCollection = collection(db, 'users', userDocRef.id, 'comments');
+            const querySnapshot2 = await getDocs(userDoc2);
+            if (querySnapshot2.empty) {
+                console.error('User document does not exist:', id);
+                return;
+            }
+            const userDocRef1 = querySnapshot1.docs[0].ref;
+            const commentsCollection = collection(db, 'users', userDocRef1.id, 'comments');
+            const userDocRef2 = querySnapshot2.docs[0].ref;
+            const userDocSnap2 = await getDoc(userDocRef2);
 
-            if (userDocSnap.exists()) {
-                const userData = userDocSnap.data(); // Fetches the entire document data as an object
+            if (userDocSnap2.exists()) {
+                const userData = userDocSnap2.data(); // Fetches the entire document data as an object
                 console.log("User data:", userData);
                 await addDoc(commentsCollection, {
                     uid: user.uid,
@@ -160,19 +166,19 @@ const Profile: React.FC = () => {
                     </div>
                 ))}
                 <h2>Comments</h2>
-                <div className="comments">
-                        {comments.map((comment) => (
-                            <div key={comment.id} className="comment">
-                                <Link to={`/profile/${comment.uid}`}> 
-                                    <span>
-                                        <strong>{comment.name}@{comment.username}:</strong> 
-                                    </span>
-                                </Link>
-                                <p>{comment.text}</p>
-                            </div>
-                        ))}
-                    </div>
                 <hr />
+                <div className="comments">
+                    {comments.map((comment) => (
+                        <div key={comment.id} className="comment">
+                            <Link to={`/profile/${comment.uid}`}> 
+                                <span>
+                                    <strong>{comment.name}@{comment.username}:</strong> 
+                                </span>
+                            </Link>
+                            <p>{comment.text}</p>
+                        </div>
+                    ))}
+                </div>
                 <form onSubmit={handleCommentSubmit}>
                         <textarea
                             placeholder="Add a comment"

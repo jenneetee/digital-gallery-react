@@ -19,7 +19,7 @@ function Homepage() {
     } 
     useEffect(() => {
         const handleScroll = () => {
-            const vhThreshold = window.innerHeight * 0.5;
+            const vhThreshold = window.innerHeight * 0.33;
             // Check scroll position and update both scroll state and text
             setIsScrolled(window.scrollY > vhThreshold);
             if (window.scrollY > vhThreshold) {
