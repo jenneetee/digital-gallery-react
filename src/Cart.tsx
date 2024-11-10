@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from './CartContent';
-import { auth } from './firebase';
 
 const Cart: React.FC = () => {
     //Cart variables

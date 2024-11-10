@@ -114,7 +114,6 @@ const App: React.FC = () => {
             <Route path="gallery" element={<Gallery />} />
             <Route path="search" element={<Search />} />
           </Route>
-          <Route path="/artwork/:id" element={<ArtworkDetail />} />
           <Route path="/cart" element={<Cart />} />
         </Routes>
         </Router>
