@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { db, auth } from './firebase';  // Ensure this is correctly imported
-import { collection, doc, getDoc, getDocs, addDoc, query, where} from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, addDoc, query, where } from 'firebase/firestore';
+import { useCart } from './CartContent';
 import './ArtworkDetail.css';
 
 function ArtworkDetail() {
@@ -11,6 +12,8 @@ function ArtworkDetail() {
     const [comments, setComments] = useState<any[]>([]);
     const [commentText, setCommentText] = useState('');
     const [error, setError] = useState('');
+    const [price, setPrice] = useState('');
+    const { addToCart } = useCart();
 
     useEffect(() => {
         if (!id) {
@@ -124,6 +127,10 @@ function ArtworkDetail() {
                             </Link>
                         </h4>
                     </div>
+
+                    <br></br>
+                    <hr></hr>
+                    <button onClick={() => addToCart(id)}>Send to Cart</button>
 
                     <br></br>
                     <hr></hr>
