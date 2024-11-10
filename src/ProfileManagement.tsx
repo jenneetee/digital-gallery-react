@@ -224,7 +224,7 @@ const ProfileManagement: React.FC = () => {
             <input value={'•'.repeat(password.length)} onChange={(e) => setPassword(e.target.value)} />
           </div> <br />
 
-          <button onClick={updateUserData}>Update Profile</button>
+          <button type="button" className="button" onClick={updateUserData}>Update Profile</button>
           </> ):
           (<><p>Sorry, You are not allowed to access this page.</p></>)}
         </>

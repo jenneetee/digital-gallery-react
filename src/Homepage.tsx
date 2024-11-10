@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { db, auth } from './firebase.js';  // If it's directly in the src folder.
 import { collection, getDocs, query, where } from 'firebase/firestore';  // Import Firestore methods
 import { Link, useNavigate } from 'react-router-dom';  // Import Link and useNavigate from react-router-dom
+import Exhibitions from './Exhibitions'
 import './Homepage.css';  // Import the CSS file
 
 function Homepage() {
     const [scrollText, setScrollText] = useState("Welcome to the Digital Art Gallery");
     const [isScrolled, setIsScrolled] = useState(false);
     const navigate = useNavigate();
+    const user = auth.currentUser;
     const fetchUserData = async () => {
-        const user = auth.currentUser;
         if (user) {
             navigate('/dashboard');
         }    
@@ -47,8 +48,14 @@ function Homepage() {
                 </div>
             </div>
             <div className="homepage-container">
-                <h1>Exhibitions</h1>
-
+                {user ? (<Exhibitions></Exhibitions>) : 
+                (
+                    <div>
+                        <h1>Exhibitions</h1>
+                        <p>Sorry, you have to be Logged in to View Exhibitions</p>
+                        <button type="button" className="button" onClick={fetchUserData}>Log In</button>
+                    </div>
+                )}
             </div>
         </div>
     );

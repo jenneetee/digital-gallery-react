@@ -149,22 +149,24 @@ const Profile: React.FC = () => {
                 <p>@{username}</p>
                 {user.uid == id ? (
                     <>
-                        <Link to="./profile-management" >Edit Profile</Link> <br /><br />
+                        <Link to="./profile-management" ><button type="button" className="button">Edit Profile</button></Link> <br /><br />
                     </>) : 
                     (<></>)}
                 <h2>Artwork</h2>
                 <hr />
-                {artwork.map((artworkItem) => (
-                    <div key={artworkItem.id} className="artwork">
-                        <Link to={`/artwork/${artworkItem.id}`}>
-                            <img
-                                src={artworkItem.imageUrl}
-                                alt={artworkItem.title}
-                                className="artwork-image"
-                            />
-                        </Link>
-                    </div>
-                ))}
+                <div className="profile-artwork-list">
+                    {artwork.map((artworkItem) => (
+                        <div key={artworkItem.id} className="profile-artwork">
+                            <Link to={`/artwork/${artworkItem.id}`}>
+                                <img
+                                    src={artworkItem.imageUrl}
+                                    alt={artworkItem.title}
+                                    className="profile-artwork-image"
+                                />
+                            </Link>
+                        </div>
+                    ))}
+                </div> <br />
                 <h2>Comments</h2>
                 <hr />
                 <div className="comments">

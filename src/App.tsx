@@ -10,6 +10,9 @@ import Profile from './Profile';
 import Gallery from './Gallery';
 import ArtworkDetail from './ArtworkDetail';
 import Search from './Search';
+import Exhibition from './Exhibition';
+import Exhibitions from './Exhibitions';
+import CreateExhibition from './CreateExhibition';
 import Navbar from './Navbar'; // Adjust the path based on your file structure
 import { AuthProvider, useAuth } from './AuthContext';
 import './App.css'; // Import the CSS file for styling
@@ -19,7 +22,6 @@ const App: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [volume, setVolume] = useState(0.25); // Set initial volume to 25%
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
-  //const { user } = useAuth();
 
   const playlist = [
     { src: 'background-music(overmydeadbody).mp3', title: 'Over My Dead Body' },
@@ -104,12 +106,15 @@ const App: React.FC = () => {
           <Route path="/artwork/:id" element={<ArtworkDetail />} />
           <Route path="/profile/:id" element={<Profile />} />
           <Route path="/profile/:id/profile-management" element={<ProfileManagement />} />
+          <Route path="exhibitions/:id" element={<Exhibition />} />
           <Route path="/dashboard" element={<ProtectedDashboard />}>
             <Route path="payments" element={<Payments />} />
             <Route path="profile/:id" element={<Profile />} />
             <Route path="profile/:id/profile-management" element={<ProfileManagement />} />
             <Route path="gallery" element={<Gallery />} />
             <Route path="search" element={<Search />} />
+            <Route path="exhibitions" element={<Exhibitions />} />
+            <Route path="exhibitions/create" element={<CreateExhibition />} />
           </Route>
         </Routes>
       </Router>
