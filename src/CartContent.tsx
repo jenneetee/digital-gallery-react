@@ -19,7 +19,15 @@ export const useCart = () => {
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [cartItems, setCartItems] = useState<string[]>([]);
 
-    const addToCart = (id: string) => setCartItems((prevItems) => [...prevItems, id]);
+    const addToCart = (itemId: string) => {
+        // Prevent adding duplicate items to the cart
+        setCartItems((prevItems) => {
+            if (prevItems.includes(itemId)) {
+                return prevItems; // Do nothing if item is already in the cart
+            }
+            return [...prevItems, itemId]; // Add the item if it's not in the cart
+        });
+    };
     const removeFromCart = (id: string) => setCartItems((prevItems) => prevItems.filter(item => item !== id));
 
     return (
