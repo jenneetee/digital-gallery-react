@@ -163,7 +163,7 @@ const Gallery: React.FC = () => {
       </div>
 
       {/* Button to toggle the sidebar */}
-      <button className="toggle-btn" onClick={toggleSidebar}>
+      <button className={`toggle-btn ${isSidebarOpen ? 'transparent' : ''}`} onClick={toggleSidebar}>
         {isSidebarOpen ? 'Close' : 'Upload'}
       </button>
     </div>

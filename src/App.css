@@ -1,24 +1,29 @@
 .audio-controls {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    background: rgba(255, 255, 255, 0.8);
-    padding: 10px;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .audio-controls button {
-    background: #333;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  .audio-controls input[type="range"] {
-    cursor: pointer;
-  }
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 5px; /* Reduced padding */
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Reduced gap */
+  z-index: 1000; /* Ensure it stays above other content, including the wallpaper */
+  transform: scale(0.90); /* Scale down to half its size */
+  transform-origin: top right; /* Ensure it scales from the top right corner */
+}
+
+.audio-controls button {
+  background: #333;
+  color: white;
+  border: none;
+  padding: 2.5px 5px; /* Reduced padding */
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 0.75rem; /* Reduced font size */
+}
+
+.audio-controls input[type="range"] {
+  cursor: pointer;
+  width: 50%; /* Adjust width if necessary */
+}

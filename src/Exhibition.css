@@ -20,3 +20,14 @@
     width: 75px !important;
     margin-right: 10px;
 }
+
+/* Style for clickable exhibition links */
+.exhibition-link {
+    color: black; /* Set text color to black */
+    text-decoration: none; /* Remove underline */
+}
+
+.exhibition-link:hover {
+    color: black; /* Ensure text color remains black on hover */
+    text-decoration: underline; /* Optional: Add underline on hover */
+}

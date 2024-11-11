@@ -1,11 +1,29 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
 .dashboard-container {
+  position: relative; /* Ensure the container is positioned relative */
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
+  background-image: url('/updatedbackground.png'); /* Correct path to your wallpaper */
+  background-size: cover; /* Ensure the background image covers the entire container */
+  background-repeat: no-repeat;
+  background-position-x: 20%; /* Move the image 20% to the right */
+  background-position-y: center; /* Center the background image vertically */
+  min-height: 100vh; /* Ensure it covers at least the full viewport height */
+  width: 100%; /* Ensure it covers the full viewport width */
+  z-index: 1; /* Ensure it is behind other content */
 }
 
 .dashboard-nav {
+  position: relative; /* Ensure the nav is positioned relative */
+  z-index: 3; /* Ensure it is above the background */
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
@@ -16,14 +34,10 @@
   padding: 10px 20px;
   background-color: #333;
   color: white;
-  border: none;
+  text-decoration: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
-}
-
-.dashboard-tab.active {
-  background-color: #555;
 }
 
 .dashboard-tab:hover {
@@ -31,6 +45,11 @@
 }
 
 .dashboard-content {
+  position: relative; /* Ensure the content is positioned relative */
+  z-index: 2; /* Ensure it is above the background */
   width: 100%;
   max-width: 800px;
+  background: rgba(255, 255, 255, 0.8); /* Optional: Add a semi-transparent background to the content */
+  padding: 20px;
+  border-radius: 10px;
 }
