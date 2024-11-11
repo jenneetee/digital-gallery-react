@@ -55,7 +55,7 @@ const leftContainerStyle = {
 };
 
 const centerContainerStyle = {
-  position: 'absolute',
+  position: 'absolute' as const,
   left: '50%',
   transform: 'translateX(-50%)',
   display: 'flex',

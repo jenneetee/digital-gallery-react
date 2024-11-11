@@ -15,6 +15,7 @@ import Exhibitions from './Exhibitions';
 import CreateExhibition from './CreateExhibition';
 import Navbar from './Navbar'; // Adjust the path based on your file structure
 import Cart from './Cart';
+import Confirmation from './Confirmation';
 import { CartProvider } from './CartContent';
 import { AuthProvider, useAuth } from './AuthContext';
 import './App.css'; // Import the CSS file for styling
@@ -110,6 +111,8 @@ const App: React.FC = () => {
           <Route path="/profile/:id" element={<Profile />} />
           <Route path="/profile/:id/profile-management" element={<ProfileManagement />} />
           <Route path="exhibitions/:id" element={<Exhibition />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/confirmation/:id" element={<Confirmation />} />
           <Route path="/dashboard" element={<ProtectedDashboard />}>
             <Route path="payments" element={<Payments />} />
             <Route path="profile/:id" element={<Profile />} />
@@ -119,7 +122,6 @@ const App: React.FC = () => {
             <Route path="exhibitions" element={<Exhibitions />} />
             <Route path="exhibitions/create" element={<CreateExhibition />} />
           </Route>
-          <Route path="/cart" element={<Cart />} />
         </Routes>
         </CartProvider>
         </Router>
