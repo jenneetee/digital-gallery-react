@@ -20,16 +20,11 @@ const Payments: React.FC = () => {
                 if (userSnapshot.empty) {
                     return;
                 }
-                const userDocRef = userSnapshot.docs[0].ref;
-          const userPaymentsQuery = query(collection(userDocRef, 'payments'));
-          const paymentsSnapshot = await getDocs(userPaymentsQuery);
-          
-          // Map through payments snapshot and store in state
-          const paymentsList = paymentsSnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          setPayments(paymentsList); // Update the state with fetched payments
+            const userDocRef = userSnapshot.docs[0].ref;
+            const paymentsCollection = collection(db, 'users', userDocRef.id, 'payments');
+            const paymentsSnapshot = await getDocs(paymentsCollection);
+            const paymentsData = paymentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          setPayments(paymentsData); // Update the state with fetched payments
         } catch (err) {
           setError('Failed to load payments');
           console.error('Error fetching payments:', err);
