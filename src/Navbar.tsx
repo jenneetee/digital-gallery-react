@@ -31,6 +31,9 @@ const Navbar: React.FC = () => {
           <Link to="/dashboard" style={linkStyle}>Dashboard</Link>
         </li>
         <li style={liStyle}>
+          <Link to="/cart" style={linkStyle}>Cart</Link>
+        </li>
+        <li style={liStyle}>
           <button onClick={handleLogout}>Logout</button>
         </li>
         </>

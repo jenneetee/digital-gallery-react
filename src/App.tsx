@@ -14,6 +14,8 @@ import Exhibition from './Exhibition';
 import Exhibitions from './Exhibitions';
 import CreateExhibition from './CreateExhibition';
 import Navbar from './Navbar'; // Adjust the path based on your file structure
+import Cart from './Cart';
+import { CartProvider } from './CartContent';
 import { AuthProvider, useAuth } from './AuthContext';
 import './App.css'; // Import the CSS file for styling
 
@@ -76,7 +78,8 @@ const App: React.FC = () => {
 
   return (
     <AuthProvider>
-      <Router basename="/digital-gallery-react">
+      <CartProvider>
+        <Router basename="/digital-gallery-react">
         <Navbar />
         <div className="audio-controls">
           <button onClick={togglePlayPause}>
@@ -116,8 +119,10 @@ const App: React.FC = () => {
             <Route path="exhibitions" element={<Exhibitions />} />
             <Route path="exhibitions/create" element={<CreateExhibition />} />
           </Route>
+          <Route path="/cart" element={<Cart />} />
         </Routes>
-      </Router>
+        </Router>
+      </CartProvider>
     </AuthProvider>
   );
 };
