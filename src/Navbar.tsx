@@ -4,7 +4,7 @@ import { useAuth } from './AuthContext';
 import { auth } from './firebase';
 
 const Navbar: React.FC = () => {
-  const  { user } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -18,62 +18,67 @@ const Navbar: React.FC = () => {
 
   return (
     <nav style={navStyle}>
-      <ul style={ulStyle}>
+      <div style={leftContainerStyle}>
         {user ? (
-        <>
-        <li style={liStyle}>
-          <span style={linkStyle}>Currently LoggedIn as, {user.displayName}</span>
-        </li>
-        <li style={liStyle}>
-          <Link to="/homepage" style={linkStyle}>Homepage</Link>
-        </li>
-        <li style={liStyle}>
-          <Link to="/dashboard" style={linkStyle}>Dashboard</Link>
-        </li>
-        <li style={liStyle}>
-          <Link to="/cart" style={linkStyle}>Cart</Link>
-        </li>
-        <li style={liStyle}>
-          <button onClick={handleLogout}>Logout</button>
-        </li>
-        </>
+          <>
+            <strong style={{ color: 'grey', fontSize: '1.1rem' }}>{user.displayName}</strong>
+            <button onClick={handleLogout} style={buttonStyle}>Logout</button>
+          </>
         ) : (
-        <>
-        <li style={liStyle}>
-          <Link to="/homepage" style={linkStyle}>Homepage</Link>
-        </li>
-        <li style={liStyle}>
-          <Link to="/login" style={linkStyle}>Login</Link>
-        </li>
-        <li style={liStyle}>
-          <Link to="/register" style={linkStyle}>Register</Link>
-        </li>
-        </>)}
-      </ul>
+          <>
+            <Link to="/login" style={linkStyle}>Login</Link>
+            <Link to="/register" style={linkStyle}>Register</Link>
+          </>
+        )}
+      </div>
+      <div style={centerContainerStyle}>
+        <Link to="/homepage" style={linkStyle}>Homepage</Link>
+        <Link to="/dashboard" style={linkStyle}>Dashboard</Link>
+        <Link to="/cart" style={linkStyle}>Cart</Link>
+      </div>
     </nav>
   );
 };
 
-// Optional: You can add styles using CSS or inline styles
-const navStyle: React.CSSProperties = {
+const navStyle = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
   backgroundColor: '#333',
   padding: '10px',
 };
 
-const ulStyle: React.CSSProperties = {
-  listStyleType: 'none',
-  margin: 0,
-  padding: 0,
+const leftContainerStyle = {
   display: 'flex',
+  alignItems: 'center',
+  gap: '20px',
 };
 
-const liStyle: React.CSSProperties = {
-  marginRight: '20px',
+const centerContainerStyle = {
+  position: 'absolute',
+  left: '50%',
+  transform: 'translateX(-50%)',
+  display: 'flex',
+  gap: '20px',
 };
 
-const linkStyle: React.CSSProperties = {
-  color: 'white',
+const linkStyle = {
+  color: 'black',
   textDecoration: 'none',
+  backgroundColor: 'white', // Set background color to white
+  padding: '10px 20px',
+  borderRadius: '5px',
+  display: 'inline-block',
+};
+
+const buttonStyle = {
+  backgroundColor: 'transparent', // Set background color to transparent
+  color: 'white', // Set text color to white
+  border: '1px solid white', // Optional: Add a border to make it more visible
+  padding: '5px 10px', // Make the button smaller
+  cursor: 'pointer',
+  textDecoration: 'none',
+  borderRadius: '5px',
 };
 
 export default Navbar;

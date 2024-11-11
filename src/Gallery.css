@@ -2,14 +2,14 @@
     font-family: "Limelight", sans-serif;
     font-weight: 400;
     font-style: normal;
-  }
-  
+}
+
 h1 {
     font-family: "Limelight", sans-serif;
     margin: 10px;
 }
 
-body{
+body {
     padding-bottom: 100px;
 }
 
@@ -69,11 +69,11 @@ body{
 
 /* Style for the collapsible sidebar */
 .sidebar {
-    position: absolute; /* Change to absolute positioning */
+    position: fixed; /* Change to fixed positioning */
     top: 80px; /* Adjust to move below the navbar (adjust as needed) */
     right: -300px; /* Start with the sidebar off-screen */
     width: 300px;
-    height: 100%; /* Sidebar takes up full height */
+    height: 400px; /* Set a specific height for the sidebar */
     background-color: #f9f9f9;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
     transition: right 0.3s ease-in-out; /* Smooth transition for opening and closing */
@@ -89,7 +89,7 @@ body{
 
 /* Button to toggle the sidebar */
 .toggle-btn {
-    position: absolute; /* Change to absolute positioning */
+    position: fixed; /* Change to fixed positioning */
     top: 80px; /* Move button down to align with sidebar */
     right: 20px;
     background-color: #252525;
@@ -100,6 +100,12 @@ body{
     font-size: 20px;
     cursor: pointer;
     z-index: 1001; /* Ensure it stays above the sidebar */
+    transition: background-color 0.3s, opacity 0.3s, top 0.3s; /* Smooth transition for background color, opacity, and position */
+}
+
+.toggle-btn.transparent {
+    background-color: rgba(37, 37, 37, 0.5); /* Make the button faded when the sidebar is open */
+    color: rgba(255, 255, 255, 0.5); /* Make the text faded */
 }
 
 .toggle-btn:hover {
@@ -109,6 +115,21 @@ body{
 /* Ensure the gallery content doesn't overlap the sidebar */
 body.sidebar-open .gallery {
     margin-right: 300px; /* Shift the gallery content when the sidebar is open */
+}
+
+.upload-box {
+    width: 100%; /* Make the upload box take the full width of the sidebar */
+    padding: 20px;
+    border: 1px solid #ccc; /* Add a border */
+    border-radius: 10px; /* Optional: Add rounded corners */
+    background-color: #f9f9f9; /* Optional: Add a background color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add a box shadow */
+    text-align: center; /* Center the text */
+    margin-bottom: 20px; /* Add some space below the box */
+}
+
+.upload-box h2 {
+    margin-top: 0; /* Remove the top margin */
 }
 
 .upload-form {
@@ -133,8 +154,9 @@ body.sidebar-open .gallery {
     color: white;
     border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .upload-form button:hover {
-    background-color: #15837d;
+    background-color: #333;
 }
