@@ -78,8 +78,8 @@ const App: React.FC = () => {
 
   return (
     <AuthProvider>
-      <CartProvider>
         <Router basename="/digital-gallery-react">
+        <CartProvider>
         <Navbar />
         <div className="audio-controls">
           <button onClick={togglePlayPause}>
@@ -121,8 +121,8 @@ const App: React.FC = () => {
           </Route>
           <Route path="/cart" element={<Cart />} />
         </Routes>
+        </CartProvider>
         </Router>
-      </CartProvider>
     </AuthProvider>
   );
 };

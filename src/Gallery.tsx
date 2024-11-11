@@ -14,6 +14,7 @@ interface Artwork {
   artist: string;
   uid: string;
   createdAt: Date;
+  price: number;
 }
 
 const Gallery: React.FC = () => {
@@ -23,6 +24,7 @@ const Gallery: React.FC = () => {
   const [description, setDescription] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
+  const [price, setPrice] = useState(0);
   const [error, setError] = useState('');
   const clientId = import.meta.env.VITE_IMGUR_CLIENT_ID;
 
@@ -46,6 +48,13 @@ const Gallery: React.FC = () => {
     fetchArtworks();
   }, []);
 
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Ensure the value is a number and format it to 2 decimal places
+    const formattedValue = parseFloat(value).toFixed(2);
+    setPrice(parseFloat(formattedValue));  // Store the price as a number with 2 decimals
+  };
+
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -56,7 +65,7 @@ const Gallery: React.FC = () => {
       }
       const user = auth.currentUser;
       const userId = user.uid;
-      const newArtwork = { title, description, imageUrl: imageFileUrl, artist: user.displayName, uid: userId, createdAt: new Date() };
+      const newArtwork = { title, description, imageUrl: imageFileUrl, artist: user.displayName, uid: userId, createdAt: new Date(), price: price };
       const docRef = await addDoc(collection(db, 'artworks'), newArtwork);
       const userDoc = query(collection(db, 'users'), where('uid', '==', user.uid));
       const querySnapshot = await getDocs(userDoc);
@@ -70,6 +79,7 @@ const Gallery: React.FC = () => {
 
       setTitle('');
       setDescription('');
+      setPrice(0);
       const userArtworkRef = await addDoc(collection(userDocRef, 'artwork'), newArtwork);
       console.log('Added artwork to user-specific artwork subcollection:', userArtworkRef.id);
       setArtworks((prevArtworks) => [
@@ -155,6 +165,14 @@ const Gallery: React.FC = () => {
             placeholder="Artwork Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            required
+          />
+          Price:
+          <input
+            type="number"
+            placeholder="Price"
+            value={price.toFixed(2)}
+            onChange={handlePriceChange}
             required
           />
           <input type="file" onChange={handleFileChange} required/>

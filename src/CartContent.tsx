@@ -1,4 +1,5 @@
 ﻿import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface CartContextType {
     cartItems: string[];
@@ -16,9 +17,10 @@ export const useCart = () => {
     return context;
 };
 
+
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [cartItems, setCartItems] = useState<string[]>([]);
-
+    const navigate = useNavigate();
     const addToCart = (itemId: string) => {
         // Prevent adding duplicate items to the cart
         setCartItems((prevItems) => {
@@ -27,6 +29,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             }
             return [...prevItems, itemId]; // Add the item if it's not in the cart
         });
+        navigate('/cart');
     };
     const removeFromCart = (id: string) => setCartItems((prevItems) => prevItems.filter(item => item !== id));
 
