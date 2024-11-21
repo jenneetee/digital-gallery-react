@@ -10,6 +10,11 @@
     max-height: 400px; /* Set max height to keep images consistent */
     margin-top: 10px;
 }
+
+.artist-detail {
+    display: inline;
+}
+
 .comments-section {
     margin-top: 20px;
 }
@@ -56,4 +61,10 @@ form button {
 
 form button:hover {
     background-color: #15837d;
+}
+
+.profile-artist {
+    height: 50px !important;
+    width: 50px !important;
+    margin-right: 10px;
 }

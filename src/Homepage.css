@@ -1,0 +1,66 @@
+.homepage-background-default {
+    background-image: url('/backgroundgif.gif'); /* Update the path if needed */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    min-height: 100vh; /* Full viewport height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease-in-out;
+    opacity: 1; /* Fully visible when not scrolled */
+}
+.homepage-background-scrolled {
+    background-image: url('/backgroundgif.gif'); /* Update the path if needed */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    min-height: 100vh; /* Full viewport height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease-in-out;
+    opacity: 0; /* Fully visible when not scrolled */
+}
+
+.homepage-button {
+    background: transparent;
+    font-size: 18px;
+    border: 2px solid white;
+    color: white;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+
+.default-layout {
+    color: white;
+    text-align: center;
+    transition: opacity 1s ease-in-out;
+    opacity: 1; /* Fully visible when not scrolled */
+}
+
+/* Fade out the background and text when scrolled */
+.scrolled-layout {
+    color: white;
+    text-align: center;
+    transition: opacity 1s ease-in-out;
+    opacity: 0; /* Fade out the text and background when scrolled */
+}
+
+.homepage-container {
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    margin-top: 200px;
+    margin: auto;
+    width: 80%;
+    padding: 20px;
+    border-radius: 10px;
+    position: relative;
+}

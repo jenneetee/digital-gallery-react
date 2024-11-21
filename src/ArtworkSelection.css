@@ -1,0 +1,19 @@
+.thumbnail {
+    height: 100px;
+    width: 100px;
+    margin-left: 10px;
+}
+
+.artwork-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Space between images */
+    justify-content: flex-start; /* Aligns images to the start of the row */
+}
+
+.artwork-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 150px; /* Set a width for each item */
+}

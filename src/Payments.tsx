@@ -1,100 +1,50 @@
-import React, { useState } from 'react';
-import { db } from './firebase.js';  
-import { doc, collection, addDoc } from 'firebase/firestore';  // Firestore methods
+import React, { useState, useEffect } from 'react';
+import { db, auth } from './firebase.js';  
+import { Link } from 'react-router-dom';
+import { collection, getDocs, query, where } from 'firebase/firestore';  // Firestore methods
+import './Payments.css';
 
-function Payments() {
+const Payments: React.FC = () => {
   // State variables for form inputs
-  const [cardNumber, setCardNumber] = useState('');
-  const [cvv, setCvv] = useState('');
-  const [expiryDate, setExpiryDate] = useState('');
-  const [nameOnCard, setNameOnCard] = useState('');
-  const [userId, setUserId] = useState('');  // To identify the user
-  const [successMessage, setSuccessMessage] = useState('');
+  const [payments, setPayments] = useState<any[]>([]);  // Store payments in state
+  const [error, setError] = useState<string>('');
 
-  // Function to handle payment submission
-  const handlePayment = async () => {
-    try {
-      if (!userId) {
-        setSuccessMessage('Please provide a valid User ID.');
-        return;
+  useEffect(() => {
+    const fetchPayments = async () => {
+      const user = auth.currentUser;
+
+      if (user) {
+        try {
+            const userDoc = query(collection(db, 'users'), where('uid', '==', user.uid));
+            const userSnapshot = await getDocs(userDoc);
+                if (userSnapshot.empty) {
+                    return;
+                }
+            const userDocRef = userSnapshot.docs[0].ref;
+            const paymentsCollection = collection(db, 'users', userDocRef.id, 'payments');
+            const paymentsSnapshot = await getDocs(paymentsCollection);
+            const paymentsData = paymentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          setPayments(paymentsData); // Update the state with fetched payments
+        } catch (err) {
+          setError('Failed to load payments');
+          console.error('Error fetching payments:', err);
+        }
+      } else {
+        setError('User is not authenticated');
       }
+    };
 
-      // Reference to the user's document
-      const userDocRef = doc(db, 'users', userId);
-
-      // Add payment details as a subcollection under the user's document
-      await addDoc(collection(userDocRef, 'payments'), {
-        cardNumber: cardNumber,
-        cvv: cvv,
-        expiryDate: expiryDate,
-        nameOnCard: nameOnCard,
-      });
-
-      setSuccessMessage('Payment details successfully stored for user!');
-      setCardNumber('');
-      setCvv('');
-      setExpiryDate('');
-      setNameOnCard('');
-    } catch (error) {
-      console.error('Error saving payment details:', error);
-      setSuccessMessage('Error processing payment. Please try again.');
-    }
-  };
+    fetchPayments();
+  }, []);
 
   return (
-    <div>
-      <h1>Enter Payment Details</h1>
-
-      <div>
-        User ID:
-      </div>
-      <input
-        type="text"
-        value={userId}
-        onChange={(e) => setUserId(e.target.value)}
-      />
-
-      <div>
-        Name on Card:
-      </div>
-      <input
-        type="text"
-        value={nameOnCard}
-        onChange={(e) => setNameOnCard(e.target.value)}
-      />
-
-      <div>
-        Card Number:
-      </div>
-      <input
-        type="text"
-        value={cardNumber}
-        onChange={(e) => setCardNumber(e.target.value)}
-      />
-
-      <div>
-        CVV:
-      </div>
-      <input
-        type="text"
-        value={cvv}
-        onChange={(e) => setCvv(e.target.value)}
-      />
-
-      <div>
-        Expiry Date (MM/YY):
-      </div>
-      <input
-        type="text"
-        value={expiryDate}
-        onChange={(e) => setExpiryDate(e.target.value)}
-      />
-
-      <div>
-        <button onClick={handlePayment}>Submit Payment</button>
-      </div>
-
-      {successMessage && <p>{successMessage}</p>}
+    <div className="payments-container">
+      <h1>Payments</h1>
+        {payments.map((payment) => (
+            <li key={payment.id}>
+              <Link to={`/confirmation/${payment.id}`}>Payment ID: {payment.id}</Link>
+            </li>
+          ))}
     </div>
   );
 }

@@ -1,15 +1,23 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import Homepage from './Homepage';
 import Login from './Login';      // Adjust the import based on your file structure
 import Register from './Register'; // Adjust the import based on your file structure
 import Payments from './Payments'; // Adjust the import based on your file structure
 import Dashboard from './Dashboard'; // Adjust the import based on your file structure
-import BuyArt from './BuyArt'; // Adjust the import based on your file structure
-import SellArt from './SellArt'; // Adjust the import based on your file structure
-import AccountSettings from './AccountSettings'; // Adjust the import based on your file structure
-import Navbar from './Navbar'; // Adjust the path based on your file structure
+import ProfileManagement from './ProfileManagement'; // Adjust the import based on your file structure
+import Profile from './Profile';
 import Gallery from './Gallery';
 import ArtworkDetail from './ArtworkDetail';
+import Search from './Search';
+import Exhibition from './Exhibition';
+import Exhibitions from './Exhibitions';
+import CreateExhibition from './CreateExhibition';
+import Navbar from './Navbar'; // Adjust the path based on your file structure
+import Cart from './Cart';
+import Confirmation from './Confirmation';
+import { CartProvider } from './CartContent';
+import { AuthProvider, useAuth } from './AuthContext';
 import './App.css'; // Import the CSS file for styling
 
 const App: React.FC = () => {
@@ -70,44 +78,61 @@ const App: React.FC = () => {
   };
 
   return (
-    <Router>
-      <Navbar />
-      <div className="audio-controls">
-        <button onClick={togglePlayPause}>
-          {isPlaying ? 'Pause' : 'Play'}
-        </button>
-        <button onClick={handlePrevSong}>Previous</button>
-        <button onClick={handleNextSong}>Next</button>
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={volume}
-          onChange={handleVolumeChange}
-        />
-        <div>Now Playing: {playlist[currentSongIndex].title}</div>
-      </div>
-      <audio ref={audioRef} autoPlay loop key={playlist[currentSongIndex].src}>
-        <source src={playlist[currentSongIndex].src} type="audio/mpeg" />
-        Your browser does not support the audio element.
-      </audio>
-      <Routes>
-        <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/payments" element={<Payments />} />
-        <Route path="/gallery" element={<Gallery />} />
-        <Route path="/" element={<Gallery />} />
-        <Route path="/artwork/:id" element={<ArtworkDetail />} />
-        <Route path="/dashboard" element={<Dashboard />}>
-          <Route path="buy-art" element={<BuyArt />} />
-          <Route path="sell-art" element={<SellArt />} />
-          <Route path="account-settings" element={<AccountSettings />} />
-        </Route>
-      </Routes>
-    </Router>
+    <AuthProvider>
+        <Router basename="/digital-gallery-react">
+        <CartProvider>
+        <Navbar />
+        <div className="audio-controls">
+          <button onClick={togglePlayPause}>
+            {isPlaying ? 'Pause' : 'Play'}
+          </button>
+          <button onClick={handlePrevSong}>Previous</button>
+          <button onClick={handleNextSong}>Next</button>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={volume}
+            onChange={handleVolumeChange}
+          />
+          <div>Now Playing: {playlist[currentSongIndex].title}</div>
+        </div>
+        <audio ref={audioRef} autoPlay loop key={playlist[currentSongIndex].src}>
+          <source src={playlist[currentSongIndex].src} type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
+        <Routes>
+          <Route path="/" element={<Navigate to="/homepage" />} />
+          <Route path="/homepage" element={<Homepage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/artwork/:id" element={<ArtworkDetail />} />
+          <Route path="/profile/:id" element={<Profile />} />
+          <Route path="/profile/:id/profile-management" element={<ProfileManagement />} />
+          <Route path="exhibitions/:id" element={<Exhibition />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/confirmation/:id" element={<Confirmation />} />
+          <Route path="/dashboard" element={<ProtectedDashboard />}>
+            <Route path="payments" element={<Payments />} />
+            <Route path="profile/:id" element={<Profile />} />
+            <Route path="profile/:id/profile-management" element={<ProfileManagement />} />
+            <Route path="gallery" element={<Gallery />} />
+            <Route path="search" element={<Search />} />
+            <Route path="exhibitions" element={<Exhibitions />} />
+            <Route path="exhibitions/create" element={<CreateExhibition />} />
+          </Route>
+        </Routes>
+        </CartProvider>
+        </Router>
+    </AuthProvider>
   );
 };
+
+const ProtectedDashboard = () => {
+  const { user } = useAuth();
+  return user ? <Dashboard /> : <Navigate to="/login" />;
+};
+
 
 export default App;

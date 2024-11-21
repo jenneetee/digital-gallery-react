@@ -1,0 +1,33 @@
+.profile-container {
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+}
+
+.profile-img {
+    height: 200px;
+    width: 200px;
+}
+
+.profile-artwork-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Space between images */
+    justify-content: flex-start; /* Aligns images to the start of the row */
+}
+
+.profile-artwork-image {
+    height: 150px;
+    width: 150px;
+}
+
+.comments {
+    margin-top: 20px;
+}
+
+.comment {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
